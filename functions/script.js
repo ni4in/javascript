@@ -1,27 +1,38 @@
 "use strict"
 
-const bookings = [];
-const createBooking = function(flightNum, numPassengers = 1, price = 199){
+// const greet = function(greeting){
+//     return function(name){
+//         console.log(`${greeting} ${name}`);
+//     };
+// };
 
-    const booking = {
-        flightNum,
-        numPassengers,
-        price,
-    };
-    bookings.push(booking);
-    console.log(booking)
+// const greet = (greeting) => (name) => console.log(`$(greeting) ${name}`); 
+// const student = {
+//     sname : "nithin",
+//     age : 19,
+//     course: "Msc",
+//     ageAdult : function(){
+//         return `age from adult : ${this.age - 18}`;
+//     }
+//  };
 
+// const my_student = student;
+
+// console.log(my_student.ageAdult())
+
+// const my_func = my_student.ageAdult;
+// console.log(`function : ${my_func}`);
+// console.log(`output : ${my_func()}`)
+
+
+const addTax = function(rate){
+    return function(value){
+        return value + rate*value;
+
+    }
 };
 
-createBooking("LH123")
+const addVat = addTax(0.23);
+console.log(addVat(100));
 
 
-const flight = "LH234";
-const jonas = {
-    name: "Jonas Schmedtmann",
-    passport: 24739479284
-};
-
-const checkIn = function(flightNum, passenger) {
-    
-}

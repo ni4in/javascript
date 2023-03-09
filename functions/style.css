@@ -36,3 +36,11 @@ h1 {
   vertical-align: middle;
   font-size: large;
 }
+.output{
+
+  height: 50px;
+  width : 150px;
+  position: absolute;
+  right:50%;
+
+}
