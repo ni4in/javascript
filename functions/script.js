@@ -25,14 +25,14 @@
 // console.log(`output : ${my_func()}`)
 
 
-const addTax = function(rate){
+const addTaxRate = function(rate){
     return function(value){
         return value + rate*value;
 
     }
 };
 
-const addVat = addTax(0.23);
+const addVat = addTaxRate(0.23);
 console.log(addVat(100));
 
 
