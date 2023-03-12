@@ -89,7 +89,14 @@ const createUsernames = function (accs) {
 };
 createUsernames(accounts);
 
-const calcPrintBalance = 
+const calcPrintBalance = function(movements){
+  const balance = movements.reduce((acc,cur)=> acc+cur,0 );
+  labelBalance.textContent = `${balance} eur`;
+}
+
+calcPrintBalance(account1.movements);
+
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -100,10 +107,12 @@ const currencies = new Map([
   ['GBP', 'Pound sterling'],
 ]);
 
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-const balance = 
+const movements = [200, 450, -400, -3000, -650, -130, 70, -1300];
 
-console.log(balance);
+const maxVal = movements.reduce((acc,cur) => cur > acc ? cur : acc,0)
+
+console.log(maxVal)
+
 
 // const euroToUsd = 1.1;
 
