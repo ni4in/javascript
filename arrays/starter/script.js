@@ -89,13 +89,22 @@ const createUsernames = function (accs) {
 };
 createUsernames(accounts);
 
-const calcPrintBalance = function(movements){
+const calcDisplayBalance = function(movements){
   const balance = movements.reduce((acc,cur)=> acc+cur,0 );
-  labelBalance.textContent = `${balance} eur`;
+  labelBalance.textContent = `${balance} €`;
 }
 
-calcPrintBalance(account1.movements);
+calcDisplayBalance(account1.movements);
 
+const calcDisplaySummary = function(movements){
+  const inAmnt = movements.filter(cur => cur > 0 ).reduce((acc,cur) => acc + cur,0);
+  const outAmnt = movements.filter(cur => cur < 0 ).reduce((acc,cur) => acc + cur,0);
+  const intAmnt =  movements.filter(cur => cur > 0 ).map(cur => cur*1.2/100).filter(cur => cur>1).reduce((acc,cur) => acc+cur,0);
+  labelSumIn.textContent = `${inAmnt} €`;
+  labelSumOut.textContent = `${Math.abs(outAmnt)}€`;
+  labelSumInterest.textContent = `${intAmnt} €`;
+}
+calcDisplaySummary(account1.movements);
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -107,7 +116,7 @@ const currencies = new Map([
   ['GBP', 'Pound sterling'],
 ]);
 
-const movements = [200, 450, -400, -3000, -650, -130, 70, -1300];
+const movements = [200, 450, -400, -3000, -650, -130, 70, - 1300];
 
 const maxVal = movements.reduce((acc,cur) => cur > acc ? cur : acc,0)
 
