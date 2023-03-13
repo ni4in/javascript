@@ -76,10 +76,10 @@ const displayMovements = function (movements) {
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
-displayMovements(account1.movements);
 
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
+    console.log(acc);
     acc.username = acc.owner
       .toLowerCase()
       .split(' ')
@@ -89,46 +89,95 @@ const createUsernames = function (accs) {
 };
 createUsernames(accounts);
 
-const calcDisplayBalance = function(movements){
-  const balance = movements.reduce((acc,cur)=> acc+cur,0 );
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, cur) => acc + cur, 0);
   labelBalance.textContent = `${balance} €`;
-}
+};
 
-calcDisplayBalance(account1.movements);
-
-const calcDisplaySummary = function(movements){
-  const inAmnt = movements.filter(cur => cur > 0 ).reduce((acc,cur) => acc + cur,0);
-  const outAmnt = movements.filter(cur => cur < 0 ).reduce((acc,cur) => acc + cur,0);
-  const intAmnt =  movements.filter(cur => cur > 0 ).map(cur => cur*1.2/100).filter(cur => cur>1).reduce((acc,cur) => acc+cur,0);
+const calcDisplaySummary = function (movements) {
+  const inAmnt = movements
+    .filter(cur => cur > 0)
+    .reduce((acc, cur) => acc + cur, 0);
+  const outAmnt = movements
+    .filter(cur => cur < 0)
+    .reduce((acc, cur) => acc + cur, 0);
+  const intAmnt = movements
+    .filter(cur => cur > 0)
+    .map(cur => (cur * 1.2) / 100)
+    .filter(cur => cur > 1)
+    .reduce((acc, cur) => acc + cur, 0);
   labelSumIn.textContent = `${inAmnt} €`;
   labelSumOut.textContent = `${Math.abs(outAmnt)}€`;
   labelSumInterest.textContent = `${intAmnt} €`;
+};
+
+const findAccount = function (accs) {
+  const username = inputLoginUsername.value;
+  const account = accs.find(val => val.username === username);
+  return account;
+};
+
+const loginCheck = function (acc) {
+  return Number(inputLoginPin.value) === acc.pin;
+};
+
+const account = findAccount(accounts);
+
+const loginStatus = loginCheck(account);
+
+
+
+const loginCallback = function(){
+
+  const account = findAccount(accounts);
+  const loginStatus = loginCheck(account); 
+  if (loginStatus){
+    calcDisplayBalance(account.movements);
+    displayMovements(account.movements);
+    calcDisplaySummary(account.movements)
+  }
+  else{
+    alert(`Login username or Pin is not correct`)
+  }
+
 }
-calcDisplaySummary(account1.movements);
+
+btnLogin.addEventListener("click",function(e){
+
+  uye.preventDefault();
+
+} 
+
+
+
+)
+
+// console.log(inputLoginUsername)
+// console.log(inputLoginPin)
+// btnLogin
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
 
-const currencies = new Map([
-  ['USD', 'United States dollar'],
-  ['EUR', 'Euro'],
-  ['GBP', 'Pound sterling'],
-]);
+// const currencies = new Map([
+//   ['USD', 'United States dollar'],
+//   ['EUR', 'Euro'],
+//   ['GBP', 'Pound sterling'],
+// ]);
 
-const movements = [200, 450, -400, -3000, -650, -130, 70, - 1300];
+// const movements = [200, 450, -400, -3000, -650, -130, 70, -1300];
 
-const maxVal = movements.reduce((acc,cur) => cur > acc ? cur : acc,0)
+// const maxVal = movements.reduce((acc, cur) => (cur > acc ? cur : acc), 0);
 
-console.log(maxVal)
+// console.log(maxVal);
 
+// // const euroToUsd = 1.1;
 
-// const euroToUsd = 1.1;
+// // const movementsUSD = movements.map(mov => mov * euroToUsd);
 
-// const movementsUSD = movements.map(mov => mov * euroToUsd);
+// // console.log(movementsUSD);
 
-// console.log(movementsUSD);
-
-// /////////////////////////////////////////////////
+// // /////////////////////////////////////////////////
 
 // movements.map()
