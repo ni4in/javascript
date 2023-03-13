@@ -70,7 +70,7 @@ const displayMovements = function (movements) {
       <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-      <div class="movements__value">${mov}</div>
+      <div class="movements__value">${mov}€</div>
     </div>
     `;
     containerMovements.insertAdjacentHTML('afterbegin', html);
@@ -79,7 +79,6 @@ const displayMovements = function (movements) {
 
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
-    console.log(acc);
     acc.username = acc.owner
       .toLowerCase()
       .split(' ')
@@ -94,16 +93,16 @@ const calcDisplayBalance = function (movements) {
   labelBalance.textContent = `${balance} €`;
 };
 
-const calcDisplaySummary = function (movements) {
-  const inAmnt = movements
+const calcDisplaySummary = function (account) {
+  const inAmnt = account.movements
     .filter(cur => cur > 0)
     .reduce((acc, cur) => acc + cur, 0);
-  const outAmnt = movements
+  const outAmnt = account.movements
     .filter(cur => cur < 0)
     .reduce((acc, cur) => acc + cur, 0);
-  const intAmnt = movements
+  const intAmnt = account.movements
     .filter(cur => cur > 0)
-    .map(cur => (cur * 1.2) / 100)
+    .map(cur => (cur * account.interestRate) / 100)
     .filter(cur => cur > 1)
     .reduce((acc, cur) => acc + cur, 0);
   labelSumIn.textContent = `${inAmnt} €`;
@@ -117,67 +116,27 @@ const findAccount = function (accs) {
   return account;
 };
 
-const loginCheck = function (acc) {
-  return Number(inputLoginPin.value) === acc.pin;
+const loginCheck = function (acnt) {
+  return Number(inputLoginPin.value) === acnt.pin;
 };
 
-const account = findAccount(accounts);
-
-const loginStatus = loginCheck(account);
-
-
-
-const loginCallback = function(){
-
+btnLogin.addEventListener('click', function (e) {
+  e.preventDefault();
   const account = findAccount(accounts);
-  const loginStatus = loginCheck(account); 
-  if (loginStatus){
-    calcDisplayBalance(account.movements);
-    displayMovements(account.movements);
-    calcDisplaySummary(account.movements)
+  if (account) {
+    const loginStatus = loginCheck(account);
+    if (loginStatus) {
+      labelWelcome.textContent = `Welcome back, ${account.owner.split(' ')[0]}`;
+      containerApp.style.opacity = 100;
+      inputLoginUsername.value = inputLoginPin.value = '';
+      inputLoginPin.blur();
+      calcDisplayBalance(account.movements);
+      displayMovements(account.movements);
+      calcDisplaySummary(account);
+    } else {
+      alert('Pin you entered is wrong');
+    }
+  } else {
+    alert(`Login username is not correct`);
   }
-  else{
-    alert(`Login username or Pin is not correct`)
-  }
-
-}
-
-btnLogin.addEventListener("click",function(e){
-
-  uye.preventDefault();
-
-} 
-
-
-
-)
-
-// console.log(inputLoginUsername)
-// console.log(inputLoginPin)
-// btnLogin
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// LECTURES
-
-// const currencies = new Map([
-//   ['USD', 'United States dollar'],
-//   ['EUR', 'Euro'],
-//   ['GBP', 'Pound sterling'],
-// ]);
-
-// const movements = [200, 450, -400, -3000, -650, -130, 70, -1300];
-
-// const maxVal = movements.reduce((acc, cur) => (cur > acc ? cur : acc), 0);
-
-// console.log(maxVal);
-
-// // const euroToUsd = 1.1;
-
-// // const movementsUSD = movements.map(mov => mov * euroToUsd);
-
-// // console.log(movementsUSD);
-
-// // /////////////////////////////////////////////////
-
-// movements.map()
+});
