@@ -88,9 +88,9 @@ const createUsernames = function (accs) {
 };
 createUsernames(accounts);
 
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((acc, cur) => acc + cur, 0);
-  labelBalance.textContent = `${balance} €`;
+const calcDisplayBalance = function (account) {
+  account.balance = account.movements.reduce((acc, cur) => acc + cur, 0);
+  labelBalance.textContent = `${account.balance} €`;
 };
 
 const calcDisplaySummary = function (account) {
@@ -110,29 +110,25 @@ const calcDisplaySummary = function (account) {
   labelSumInterest.textContent = `${intAmnt} €`;
 };
 
-const findAccount = function (accs) {
-  const username = inputLoginUsername.value;
-  const account = accs.find(val => val.username === username);
-  return account;
+let currentAccount;
+
+const updateUI = function(account){
+  displayMovements(account.movements);
+  calcDisplayBalance(account);
+  calcDisplaySummary(account);
 };
 
-const loginCheck = function (acnt) {
-  return Number(inputLoginPin.value) === acnt.pin;
-};
-
+// ++++++++++++++++ LOGIN FUNCTION ++++++++++++++++++++
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault();
-  const account = findAccount(accounts);
-  if (account) {
-    const loginStatus = loginCheck(account);
-    if (loginStatus) {
-      labelWelcome.textContent = `Welcome back, ${account.owner.split(' ')[0]}`;
+  currentAccount = accounts.find(account => account.username === inputLoginUsername.value);
+  if (currentAccount) {
+    if (Number(inputLoginPin.value) === acnt.pin) {
+      labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(' ')[0]}`;
       containerApp.style.opacity = 100;
       inputLoginUsername.value = inputLoginPin.value = '';
       inputLoginPin.blur();
-      calcDisplayBalance(account.movements);
-      displayMovements(account.movements);
-      calcDisplaySummary(account);
+      updateUI(currentAccount);
     } else {
       alert('Pin you entered is wrong');
     }
@@ -140,3 +136,28 @@ btnLogin.addEventListener('click', function (e) {
     alert(`Login username is not correct`);
   }
 });
+
+// +++++++++++++++++++++++++++++++BANK TRANSFERS+++++++++++++++++++++
+
+btnTransfer.addEventListener("click", function(e){
+  e.preventDefault();
+  const TransferAccount = accounts.find(val => val.username === inputTransferTo.value);
+  const TransferAmount = Number(inputTransferAmount.value);
+  if (TransferAccount && TransferAccount !== currentAccount.username){
+    if(TransferAmount > 0 && currentAccount.balance >= TransferAmount ){
+      TransferAccount.movements.push(TransferAmount);
+      currentAccount.movements.push(-TransferAmount);
+      updateUI(currentAccount);
+      
+    }else{
+      alert(`Account didnt have enough balance`);
+    }
+  }else{
+    alert(`Enter a valid username`)
+  }
+
+
+
+
+
+})
