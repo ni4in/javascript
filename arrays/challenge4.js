@@ -11,7 +11,15 @@ dogs.forEach(function(dog){
 
 dogs.filter(dog => dog.owners.includes("Sarah")).forEach(dog => dog.curFood > dog.recommededFood ? console.log("too much") : console.log("too little"));
 
-const {ownersEatTooMuchArray,ownersEatTooLittleArray} = dogs.reduce((acc,dog) => { dog.curFood > dog.recommededFood ? acc.ownersEatTooMuch.push(dog.owners) : acc.ownersEatTooLittle.push(dog.owners);return acc}, {ownersEatTooMuch : [], ownersEatTooLittle: []});
+const output = dogs.reduce((acc,dog) => { dog.curFood > dog.recommededFood ? acc.ownersEatTooMuch.push(dog.owners) : acc.ownersEatTooLittle.push(dog.owners);return acc}, {ownersEatTooMuch : [], ownersEatTooLittle: []});
+const [ownersEatTooLittle, ownersEatTooMuch] =  [output.ownersEatTooLittle.flat(), output.ownersEatTooMuch.flat()];
+console.log(`${ownersEatTooLittle.join(' and ')}'s dogs eat too little`);
+console.log(`${ownersEatTooMuch.join(" and ")}'s dogs eat too much`);
 
-const {}
+console.log(dogs.some(dog => dog.curFood === dog.recommededFood ));
 
+console.log(dogs.some(dog => dog.curFood > 0.9*dog.recommededFood && dog.curFood < 1.10*dog.recommededFood ));
+
+console.log(dogs.filter(dog => dog.curFood > 0.9*dog.recommededFood && dog.curFood < 1.10*dog.recommededFood ));
+
+console.log(dogs.slice().sort())
